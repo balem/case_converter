@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+<body>
+<div class="title">Case Converter</div>
+    <textarea rows="10" cols="100"></textarea>
+    <br/>
+    <button onclick="textTransform(this)" id="upper-case">Upper Case</button>
+    <button onclick="textTransform(this)" id="lower-case">Lower Case</button>
+    <button onclick="textTransform(this)" id="proper-case">Proper Case</button>
+    <button onclick="textTransform(this)" id="sentence-case">Sentence Case</button>
+    <button id="save-text-file">Save Text File</button>
+<script type="application/javascript">
+    function textTransform(e) {
+        let text =document.querySelector('textarea');
+        let caseList = [];
+        let caseValue = '';
+        switch (e.id) {
+            case  'upper-case':
+               text.value = text.value.toUpperCase();
+               console.log(text.value)
+                break;
+            case 'lower-case':
+                text.value = text.value.toLowerCase();
+                break;
+            case 'proper-case':
+                caseList = text.value.split(" ");
+                caseValue = '';
+                for (let word of caseList) {
+                    let firstLetter = word.charAt(0).toUpperCase();
+                    caseValue += caseValue.length > 0 ? " " : "";
+                    caseValue +=replaceAt(word, 0, firstLetter);
+                }
+                text.value = caseValue;
+                break;
+            case 'sentence-case':
+                text.value = text.value.toLowerCase();
+                caseList = text.value.split(". ");
+                caseValue = '';
+                for (let listKey of caseList) {
+                    let first = listKey.charAt(0).toUpperCase();
+                    caseValue += caseValue.length > 0 ? ". " : "";
+                    caseValue += replaceAt(listKey, 0, first);
+                }
+                text.value = caseValue;
+                break;
+            default:
+                text.value.toLowerCase();
+                break;
+        }
+
+
+        function replaceAt(list, index, replacement) {
+            if (index >= list.length) {
+                return this.valueOf();
+            }
+
+            let chars = list.split('');
+            chars[index] = replacement;
+            return chars.join('');
+        }
+    }
+
+    function download(filename, text) {
+        let element = document.createElement('a');
+        element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+        element.setAttribute('download', filename);
+
+        element.style.display = 'none';
+        document.body.appendChild(element);
+
+        element.click();
+
+        document.body.removeChild(element);
+    }
+
+    //document ready
+    window.addEventListener('load',function(){
+        document.getElementById("save-text-file").addEventListener("click", function () {
+            download("text.txt", document.querySelector('textarea').value);
+        });
+    });
+
+</script>
+</body>
+</html>
